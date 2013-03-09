@@ -1,4 +1,6 @@
-﻿#region license
+﻿using JetBrains.ReSharper.Psi.Modules;
+
+#region license
 // Copyright 2013 JetBrains s.r.o.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
+
 using System.Collections.Generic;
 using System.Drawing;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
