@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 #region license
 // Copyright 2013 JetBrains s.r.o.
 // 
@@ -13,6 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
+
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
@@ -30,13 +33,13 @@ namespace JetBrains.ReSharper.Plugins.AngularJS.TemplateHacks
     // declares itself unavailable, we check to see if the prefix is one that should be
     // handled, declare ourselves available, and let IncludeTemplatesRule do the rest of
     // the work
-    [Language(typeof(KnownLanguage)), Language(typeof(UnknownLanguage))]
+    [Language(typeof(KnownLanguage))]
     public class TemplateWithNonDefaultPrefixesItemsProvider : ItemsProviderOfSpecificContext<ISpecificCodeCompletionContext>
     {
-        private readonly ICodeCompletionItemsProvider includeTemplatesRule;
-        private readonly HotspotSessionExecutor hotspotSessionExecutor;
+        [CanBeNull] private readonly ICodeCompletionItemsProvider includeTemplatesRule;
+        [NotNull] private readonly HotspotSessionExecutor hotspotSessionExecutor;
 
-        public TemplateWithNonDefaultPrefixesItemsProvider(IncludeTemplatesRule includeTemplatesRule, HotspotSessionExecutor hotspotSessionExecutor)
+        public TemplateWithNonDefaultPrefixesItemsProvider(HotspotSessionExecutor hotspotSessionExecutor, IncludeTemplatesRule includeTemplatesRule = null)
         {
             this.includeTemplatesRule = includeTemplatesRule;
             this.hotspotSessionExecutor = hotspotSessionExecutor;
@@ -64,12 +67,13 @@ namespace JetBrains.ReSharper.Plugins.AngularJS.TemplateHacks
 
         private bool IsNormalProviderAvailable(ISpecificCodeCompletionContext context)
         {
-            return includeTemplatesRule.IsAvailable(context) != null;
+            return includeTemplatesRule != null && includeTemplatesRule.IsAvailable(context) != null;
         }
 
         protected override void TransformItems(ISpecificCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            includeTemplatesRule.TransformItems(context, collector, null);
+            if (includeTemplatesRule != null)
+                includeTemplatesRule.TransformItems(context, collector, null);
         }
     }
 }
