@@ -60,3 +60,5 @@ Desktop.ini
 # NCrunch
 _NCrunch*
 
+
+src/.nuget/
